@@ -1,14 +1,14 @@
 import { userGenerator } from '@/test/data-generators';
-import { render, screen, userEvent, waitFor } from '@/test/test-utils';
+import { renderApp, screen, userEvent, waitFor } from '@/test/test-utils';
 
 import { RegisterForm } from '../RegisterForm';
 
 test('should register new user and call onSuccess cb which should navigate the user to the app', async () => {
   const newUser = userGenerator({});
 
-  const onSuccess = jest.fn();
+  const onSuccess = vi.fn();
 
-  await render(<RegisterForm onSuccess={onSuccess} />, { user: null });
+  await renderApp(<RegisterForm onSuccess={onSuccess} />, { user: null });
 
   userEvent.type(screen.getByLabelText(/first name/i), newUser.firstName);
   userEvent.type(screen.getByLabelText(/last name/i), newUser.lastName);

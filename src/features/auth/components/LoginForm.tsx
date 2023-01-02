@@ -53,7 +53,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           </>
         )}
       </Form>
-      <div className="mt-2 flex items-center justify-end">
+      <div className="flex items-center justify-end mt-2">
         <div className="text-sm">
           <Link to="../register" className="font-medium text-blue-600 hover:text-blue-500">
             Register

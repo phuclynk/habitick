@@ -1,7 +1,7 @@
 import { useParams as useMockParams } from 'react-router-dom';
 
 import {
-  render,
+  renderApp,
   screen,
   userEvent,
   waitFor,
@@ -12,20 +12,22 @@ import {
 
 import { Discussion } from '../Discussion';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'), // keep the rest of the exports intact
-  useParams: jest.fn(),
-}));
+vi.mock('react-router-dom', async () => {
+  return {
+    ...vi.importActual('react-router-dom'),
+    useParams: vi.fn(),
+  };
+});
 
 const renderDiscussion = async () => {
   const fakeUser = await createUser();
   const fakeDiscussion = await createDiscussion({ teamId: fakeUser.teamId });
 
-  (useMockParams as jest.Mock).mockImplementation(() => ({
+  (useMockParams as any).mockImplementation(() => ({
     discussionId: fakeDiscussion.id,
   }));
 
-  const utils = await render(<Discussion />, {
+  const utils = await renderApp(<Discussion />, {
     user: fakeUser,
   });
 

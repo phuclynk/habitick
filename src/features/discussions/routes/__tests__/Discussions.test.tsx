@@ -1,19 +1,19 @@
 import { discussionGenerator } from '@/test/data-generators';
-import { render, screen, userEvent, waitFor, within } from '@/test/test-utils';
+import { renderApp, screen, userEvent, waitFor, within } from '@/test/test-utils';
 import { formatDate } from '@/utils/format';
 
 import { Discussions } from '../Discussions';
 
 beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterAll(() => {
-  (console.error as jest.Mock).mockRestore();
+  (console.error as any).mockRestore();
 });
 
 test('should create, render and delete discussions', async () => {
-  await render(<Discussions />);
+  await renderApp(<Discussions />);
 
   const newDiscussion = discussionGenerator();
 

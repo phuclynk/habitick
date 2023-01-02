@@ -1,12 +1,13 @@
-import jwt from 'jsonwebtoken';
 import omit from 'lodash/omit';
 import { RestRequest, createResponseComposition, context } from 'msw';
 
-import { JWT_SECRET } from '@/config';
-
 import { db } from './db';
 
-const isTesting = process.env.NODE_ENV === 'test' || ((window as any).Cypress as any);
+const isTesting = import.meta.env.NODE_ENV === 'test' || ((window as any).Cypress as any);
+
+export const encode = (obj: any) => window.btoa(JSON.stringify(obj));
+
+export const decode = (str: string) => JSON.parse(window.atob(str));
 
 export const delayedResponse = createResponseComposition(undefined, [
   context.delay(isTesting ? 0 : 1000),
@@ -35,7 +36,7 @@ export function authenticate({ email, password }: { email: string; password: str
 
   if (user?.password === hash(password)) {
     const sanitizedUser = sanitizeUser(user);
-    const encodedToken = jwt.sign(sanitizedUser, JWT_SECRET);
+    const encodedToken = encode(sanitizedUser);
     return { user: sanitizedUser, jwt: encodedToken };
   }
 
@@ -49,7 +50,7 @@ export function requireAuth(request: RestRequest) {
     if (!encodedToken) {
       throw new Error('No authorization token provided!');
     }
-    const decodedToken = jwt.verify(encodedToken, JWT_SECRET) as { id: string };
+    const decodedToken = decode(encodedToken) as { id: string };
 
     const user = db.user.findFirst({
       where: {

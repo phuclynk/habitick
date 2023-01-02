@@ -1,4 +1,4 @@
-import { render, waitFor } from '@/test/test-utils';
+import { renderApp, waitFor } from '@/test/test-utils';
 
 import { Head } from '../Head';
 
@@ -7,7 +7,7 @@ test('should add proper page title and meta description', async () => {
   const titleSuffix = ' | Bulletproof React';
   const description = 'This is a description';
 
-  render(<Head title={title} description={description} />);
+  renderApp(<Head title={title} description={description} />);
   await waitFor(() => expect(document.title).toEqual(title + titleSuffix));
 
   const metaDescription = document.querySelector("meta[name='description']");

@@ -1,6 +1,5 @@
 import { render as rtlRender, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FunctionComponent } from 'react';
 
 import { AppProvider } from '@/providers/app';
 import storage from '@/utils/storage';
@@ -44,7 +43,7 @@ const initializeUser = async (user: any) => {
 };
 
 // eslint-disable-next-line import/export
-export const render = async (
+export const renderApp = async (
   ui: any,
   { route = '/', user, ...renderOptions }: Record<string, any> = {}
 ) => {
@@ -55,7 +54,7 @@ export const render = async (
 
   const returnValue = {
     ...rtlRender(ui, {
-      wrapper: AppProvider as FunctionComponent<unknown>,
+      wrapper: AppProvider,
       ...renderOptions,
     }),
     user,
