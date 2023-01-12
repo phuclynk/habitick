@@ -1,5 +1,5 @@
 import { ContentLayout } from '@/components/Layout';
-import { useAuth } from '@/lib/auth';
+import { useUser } from '@/lib/auth';
 
 import { UpdateProfile } from '../components/UpdateProfile';
 
@@ -15,9 +15,9 @@ const Entry = ({ label, value }: EntryProps) => (
 );
 
 export const Profile = () => {
-  const { user } = useAuth();
+  const user = useUser();
 
-  if (!user) return null;
+  if (!user.data) return null;
 
   return (
     <ContentLayout title="Profile">
@@ -27,15 +27,15 @@ export const Profile = () => {
             <h3 className="text-lg leading-6 font-medium text-gray-900">User Information</h3>
             <UpdateProfile />
           </div>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">Personal details of the user.</p>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">Personal details of the user.data.</p>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
           <dl className="sm:divide-y sm:divide-gray-200">
-            <Entry label="First Name" value={user.firstName} />
-            <Entry label="Last Name" value={user.lastName} />
-            <Entry label="Email Address" value={user.email} />
-            <Entry label="Role" value={user.role} />
-            <Entry label="Bio" value={user.bio} />
+            <Entry label="First Name" value={user.data.firstName} />
+            <Entry label="Last Name" value={user.data.lastName} />
+            <Entry label="Email Address" value={user.data.email} />
+            <Entry label="Role" value={user.data.role} />
+            <Entry label="Bio" value={user.data.bio} />
           </dl>
         </div>
       </div>

@@ -1,13 +1,13 @@
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Button, Spinner } from '@/components/Elements';
 import { Notifications } from '@/components/Notifications/Notifications';
-import { AuthProvider } from '@/lib/auth';
+import { AuthLoader } from '@/lib/auth';
 import { queryClient } from '@/lib/react-query';
 
 const ErrorFallback = () => {
@@ -42,9 +42,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <QueryClientProvider client={queryClient}>
             {import.meta.env.NODE_ENV !== 'test' && <ReactQueryDevtools />}
             <Notifications />
-            <AuthProvider>
+            <AuthLoader
+              renderLoading={() => (
+                <div className="w-screen h-screen flex justify-center items-center">
+                  <Spinner size="xl" />
+                </div>
+              )}
+            >
               <Router>{children}</Router>
-            </AuthProvider>
+            </AuthLoader>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>

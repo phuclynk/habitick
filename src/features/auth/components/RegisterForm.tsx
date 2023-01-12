@@ -6,7 +6,7 @@ import * as z from 'zod';
 import { Button } from '@/components/Elements';
 import { Form, InputField, SelectField } from '@/components/Form';
 import { useTeams } from '@/features/teams';
-import { useAuth } from '@/lib/auth';
+import { useRegister } from '@/lib/auth';
 
 const schema = z
   .object({
@@ -37,7 +37,7 @@ type RegisterFormProps = {
 };
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-  const { register, isRegistering } = useAuth();
+  const registerMutation = useRegister();
   const [chooseTeam, setChooseTeam] = React.useState(false);
 
   const teamsQuery = useTeams({
@@ -50,7 +50,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     <div>
       <Form<RegisterValues, typeof schema>
         onSubmit={async (values) => {
-          await register(values);
+          await registerMutation.mutate(values);
           onSuccess();
         }}
         schema={schema}
@@ -123,7 +123,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               />
             )}
             <div>
-              <Button isLoading={isRegistering} type="submit" className="w-full">
+              <Button isLoading={registerMutation.isLoading} type="submit" className="w-full">
                 Register
               </Button>
             </div>

@@ -3,7 +3,7 @@ import * as z from 'zod';
 
 import { Button } from '@/components/Elements';
 import { Form, InputField } from '@/components/Form';
-import { useAuth } from '@/lib/auth';
+import { useLogin } from '@/lib/auth';
 
 const schema = z.object({
   email: z.string().min(1, 'Required'),
@@ -20,13 +20,13 @@ type LoginFormProps = {
 };
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
-  const { login, isLoggingIn } = useAuth();
+  const login = useLogin();
 
   return (
     <div>
-      <Form<LoginValues, typeof schema>
+      <Form<LoginValues>
         onSubmit={async (values) => {
-          await login(values);
+          await login.mutateAsync(values);
           onSuccess();
         }}
         schema={schema}
@@ -46,7 +46,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               registration={register('password')}
             />
             <div>
-              <Button isLoading={isLoggingIn} type="submit" className="w-full">
+              <Button isLoading={login.isLoading} type="submit" className="w-full">
                 Log in
               </Button>
             </div>

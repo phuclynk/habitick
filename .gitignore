@@ -9,6 +9,7 @@
 /coverage
 /cypress/videos
 /cypress/screenshots
+.vitest-preview
 
 # production
 /build

@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { axios } from '@/lib/axios';
 import { MutationConfig, queryClient } from '@/lib/react-query';
@@ -24,22 +24,8 @@ type UseCreateDiscussionOptions = {
 export const useCreateDiscussion = ({ config }: UseCreateDiscussionOptions = {}) => {
   const { addNotification } = useNotificationStore();
   return useMutation({
-    onMutate: async (newDiscussion) => {
-      await queryClient.cancelQueries('discussions');
-
-      const previousDiscussions = queryClient.getQueryData<Discussion[]>('discussions');
-
-      queryClient.setQueryData('discussions', [...(previousDiscussions || []), newDiscussion.data]);
-
-      return { previousDiscussions };
-    },
-    onError: (_, __, context: any) => {
-      if (context?.previousDiscussions) {
-        queryClient.setQueryData('discussions', context.previousDiscussions);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('discussions');
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['discussions'] });
       addNotification({
         type: 'success',
         title: 'Discussion Created',

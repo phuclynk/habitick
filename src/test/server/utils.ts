@@ -1,4 +1,3 @@
-import omit from 'lodash/omit';
 import { RestRequest, createResponseComposition, context } from 'msw';
 
 import { db } from './db';
@@ -23,7 +22,18 @@ export const hash = (str: string) => {
   return String(hash >>> 0);
 };
 
-export const sanitizeUser = (user: any) => omit(user, ['password', 'iat']);
+const omit = <T extends object>(obj: T, keys: string[]): T => {
+  const result = {} as T;
+  for (const key in obj) {
+    if (!keys.includes(key)) {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+};
+
+export const sanitizeUser = <O extends object>(user: O) => omit<O>(user, ['password', 'iat']);
 
 export function authenticate({ email, password }: { email: string; password: string }) {
   const user = db.user.findFirst({

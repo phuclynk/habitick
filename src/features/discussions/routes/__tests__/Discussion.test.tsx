@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useParams as useMockParams } from 'react-router-dom';
 
 import {
@@ -16,6 +17,7 @@ vi.mock('react-router-dom', async () => {
   return {
     ...vi.importActual('react-router-dom'),
     useParams: vi.fn(),
+    BrowserRouter: ({ children }: { children: ReactNode }) => children,
   };
 });
 
@@ -51,7 +53,7 @@ test('should update discussion', async () => {
   const titleUpdate = '-Updated';
   const bodyUpdate = '-Updated';
 
-  userEvent.click(screen.getByRole('button', { name: /update discussion/i }));
+  await userEvent.click(screen.getByRole('button', { name: /update discussion/i }));
 
   const drawer = screen.getByRole('dialog', {
     name: /update discussion/i,
@@ -60,21 +62,21 @@ test('should update discussion', async () => {
   const titleField = within(drawer).getByText(/title/i);
   const bodyField = within(drawer).getByText(/body/i);
 
-  userEvent.type(titleField, titleUpdate);
-  userEvent.type(bodyField, bodyUpdate);
+  await userEvent.type(titleField, titleUpdate);
+  await userEvent.type(bodyField, bodyUpdate);
 
   const submitButton = within(drawer).getByRole('button', {
     name: /submit/i,
   });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => expect(drawer).not.toBeInTheDocument());
 
   const newTitle = `${fakeDiscussion.title}${titleUpdate}`;
   const newBody = `${fakeDiscussion.body}${bodyUpdate}`;
 
-  expect(screen.getByText(newTitle)).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByText(newTitle)).toBeInTheDocument());
   expect(screen.getByText(newBody)).toBeInTheDocument();
 });
 
@@ -83,7 +85,7 @@ test('should create and delete a comment on the discussion', async () => {
 
   const comment = 'Hello World';
 
-  userEvent.click(screen.getByRole('button', { name: /create comment/i }));
+  await userEvent.click(screen.getByRole('button', { name: /create comment/i }));
 
   const drawer = screen.getByRole('dialog', {
     name: /create comment/i,
@@ -91,13 +93,13 @@ test('should create and delete a comment on the discussion', async () => {
 
   const bodyField = within(drawer).getByText(/body/i);
 
-  userEvent.type(bodyField, comment);
+  await userEvent.type(bodyField, comment);
 
   const submitButton = within(drawer).getByRole('button', {
     name: /submit/i,
   });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => expect(drawer).not.toBeInTheDocument());
 
@@ -116,7 +118,7 @@ test('should create and delete a comment on the discussion', async () => {
     exact: false,
   });
 
-  userEvent.click(deleteCommentButton);
+  await userEvent.click(deleteCommentButton);
 
   const confirmationDialog = screen.getByRole('dialog', {
     name: /delete comment/i,
@@ -126,7 +128,7 @@ test('should create and delete a comment on the discussion', async () => {
     name: /delete/i,
   });
 
-  userEvent.click(confirmationDeleteButton);
+  await userEvent.click(confirmationDeleteButton);
 
   await screen.findByText(/comment deleted/i);
 

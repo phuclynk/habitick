@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Comment } from '@/features/comments';
 import { User } from '@/features/users';
 
-import { useAuth } from './auth';
+import { useUser } from './auth';
 
 export enum ROLES {
   ADMIN = 'ADMIN',
@@ -27,24 +27,26 @@ export const POLICIES = {
 };
 
 export const useAuthorization = () => {
-  const { user } = useAuth();
+  const user = useUser();
 
-  if (!user) {
+  if (!user.data) {
     throw Error('User does not exist!');
   }
 
   const checkAccess = React.useCallback(
     ({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
+      if (!user.data) return false;
+
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.includes(user.role);
+        return allowedRoles?.includes(user.data.role);
       }
 
       return true;
     },
-    [user.role]
+    [user.data]
   );
 
-  return { checkAccess, role: user.role };
+  return { checkAccess, role: user.data.role };
 };
 
 type AuthorizationProps = {

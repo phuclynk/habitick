@@ -11,7 +11,9 @@ import { UpdateDiscussion } from '../components/UpdateDiscussion';
 
 export const Discussion = () => {
   const { discussionId } = useParams();
-  const discussionQuery = useDiscussion({ discussionId });
+  const discussionQuery = useDiscussion({ discussionId: discussionId as string });
+
+  if (!discussionId) return null;
 
   if (discussionQuery.isLoading) {
     return (

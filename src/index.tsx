@@ -1,15 +1,14 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 import './index.css';
 import App from './App';
 import { initMocks } from './test/server';
 
 initMocks().then(() => {
-  ReactDOM.render(
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
   );
 });

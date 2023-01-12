@@ -1,4 +1,4 @@
-import { PlusIcon } from '@heroicons/react/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import * as z from 'zod';
 
 import { Button } from '@/components/Elements';
@@ -39,7 +39,7 @@ export const CreateDiscussion = () => {
         <Form<CreateDiscussionDTO['data'], typeof schema>
           id="create-discussion"
           onSubmit={async (values) => {
-            await createDiscussionMutation.mutateAsync({ data: values });
+            createDiscussionMutation.mutate({ data: values });
           }}
           schema={schema}
         >

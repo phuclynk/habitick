@@ -1,8 +1,8 @@
-import { ArchiveIcon } from '@heroicons/react/outline';
+import { ArchiveBoxIcon } from '@heroicons/react/24/outline';
 
 import { Spinner, MDPreview } from '@/components/Elements';
 import { User } from '@/features/users';
-import { useAuth } from '@/lib/auth';
+import { useUser } from '@/lib/auth';
 import { POLICIES, Authorization } from '@/lib/authorization';
 import { formatDate } from '@/utils/format';
 
@@ -15,7 +15,7 @@ type CommentsListProps = {
 };
 
 export const CommentsList = ({ discussionId }: CommentsListProps) => {
-  const { user } = useAuth();
+  const user = useUser();
   const commentsQuery = useComments({ discussionId });
 
   if (commentsQuery.isLoading) {
@@ -33,7 +33,7 @@ export const CommentsList = ({ discussionId }: CommentsListProps) => {
         aria-label="comments"
         className="bg-white text-gray-500 h-40 flex justify-center items-center flex-col"
       >
-        <ArchiveIcon className="h-10 w-10" />
+        <ArchiveBoxIcon className="h-10 w-10" />
         <h4>No Comments Found</h4>
       </div>
     );
@@ -46,7 +46,7 @@ export const CommentsList = ({ discussionId }: CommentsListProps) => {
           key={comment.id || index}
           className="w-full bg-white shadow-sm p-4"
         >
-          <Authorization policyCheck={POLICIES['comment:delete'](user as User, comment)}>
+          <Authorization policyCheck={POLICIES['comment:delete'](user.data as User, comment)}>
             <div className="flex justify-between">
               <span className="text-xs font-semibold">{formatDate(comment.createdAt)}</span>
               <DeleteComment discussionId={discussionId} id={comment.id} />

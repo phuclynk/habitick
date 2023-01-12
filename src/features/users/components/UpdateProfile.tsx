@@ -1,9 +1,9 @@
-import { PencilIcon } from '@heroicons/react/solid';
+import { PencilIcon } from '@heroicons/react/24/solid';
 import * as z from 'zod';
 
 import { Button } from '@/components/Elements';
 import { Form, FormDrawer, InputField, TextAreaField } from '@/components/Form';
-import { useAuth } from '@/lib/auth';
+import { useUser } from '@/lib/auth';
 
 import { UpdateProfileDTO, useUpdateProfile } from '../api/updateProfile';
 
@@ -15,7 +15,7 @@ const schema = z.object({
 });
 
 export const UpdateProfile = () => {
-  const { user } = useAuth();
+  const user = useUser();
   const updateProfileMutation = useUpdateProfile();
 
   return (
@@ -45,10 +45,10 @@ export const UpdateProfile = () => {
         }}
         options={{
           defaultValues: {
-            firstName: user?.firstName,
-            lastName: user?.lastName,
-            email: user?.email,
-            bio: user?.bio,
+            firstName: user.data?.firstName,
+            lastName: user.data?.lastName,
+            email: user.data?.email,
+            bio: user.data?.bio,
           },
         }}
         schema={schema}

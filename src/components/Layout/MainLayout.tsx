@@ -3,16 +3,16 @@ import {
   UserIcon,
   FolderIcon,
   HomeIcon,
-  MenuAlt2Icon,
+  Bars3Icon,
   UsersIcon,
-  XIcon,
-} from '@heroicons/react/outline';
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import logo from '@/assets/logo.svg';
-import { useAuth } from '@/lib/auth';
+import { useLogout } from '@/lib/auth';
 import { useAuthorization, ROLES } from '@/lib/authorization';
 
 type SideNavigationItem = {
@@ -40,11 +40,13 @@ const SideNavigation = () => {
           end={index === 0}
           key={item.name}
           to={item.to}
-          className={clsx(
-            'text-gray-300 hover:bg-gray-700 hover:text-white',
-            'group flex items-center px-2 py-2 text-base font-medium rounded-md'
-          )}
-          activeClassName="bg-gray-900 text-white"
+          className={({ isActive }) =>
+            clsx(
+              'text-gray-300 hover:bg-gray-700 hover:text-white',
+              'group flex items-center px-2 py-2 text-base font-medium rounded-md',
+              isActive && 'bg-gray-900 text-white'
+            )
+          }
         >
           <item.icon
             className={clsx(
@@ -67,7 +69,7 @@ type UserNavigationItem = {
 };
 
 const UserNavigation = () => {
-  const { logout } = useAuth();
+  const logout = useLogout();
 
   const userNavigation = [
     { name: 'Your Profile', to: './profile' },
@@ -75,7 +77,7 @@ const UserNavigation = () => {
       name: 'Sign out',
       to: '',
       onClick: () => {
-        logout();
+        logout.mutate({});
       },
     },
   ].filter(Boolean) as UserNavigationItem[];
@@ -179,7 +181,7 @@ const MobileSidebar = ({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) => {
                   onClick={() => setSidebarOpen(false)}
                 >
                   <span className="sr-only">Close sidebar</span>
-                  <XIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                  <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </button>
               </div>
             </Transition.Child>
@@ -245,7 +247,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
-            <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="flex-1 px-4 flex justify-end">
             <div className="ml-4 flex items-center md:ml-6">

@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { axios } from '@/lib/axios';
 import { MutationConfig, queryClient } from '@/lib/react-query';
@@ -26,25 +26,8 @@ export const useCreateComment = ({ config, discussionId }: UseCreateCommentOptio
   const { addNotification } = useNotificationStore();
 
   return useMutation({
-    onMutate: async (newComment) => {
-      await queryClient.cancelQueries(['comments', discussionId]);
-
-      const previousComments = queryClient.getQueryData<Comment[]>(['comments', discussionId]);
-
-      queryClient.setQueryData(
-        ['comments', discussionId],
-        [...(previousComments || []), newComment.data]
-      );
-
-      return { previousComments };
-    },
-    onError: (_, __, context: any) => {
-      if (context?.previousComments) {
-        queryClient.setQueryData(['comments', discussionId], context.previousComments);
-      }
-    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['comments', discussionId]);
+      queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
       addNotification({
         type: 'success',
         title: 'Comment Created',
